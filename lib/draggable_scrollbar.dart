@@ -331,6 +331,7 @@ class _DraggableScrollbarState extends State<DraggableScrollbar>
   late AnimationController _labelAnimationController;
   late Animation<double> _labelAnimation;
   Timer? _fadeoutTimer;
+  final GlobalKey _scrollbarKey = GlobalKey();
 
   @override
   void initState() {
@@ -368,8 +369,14 @@ class _DraggableScrollbarState extends State<DraggableScrollbar>
     super.dispose();
   }
 
-  double get barMaxScrollExtent =>
-      context.size!.height - widget.heightScrollThumb;
+  double get barMaxScrollExtent {
+    final renderBox =
+        _scrollbarKey.currentContext?.findRenderObject() as RenderBox?;
+    if (renderBox != null) {
+      return renderBox.size.height - widget.heightScrollThumb;
+    }
+    return 0.0;
+  }
 
   double get barMinScrollExtent => 0.0;
 
@@ -396,6 +403,7 @@ class _DraggableScrollbarState extends State<DraggableScrollbar>
           return false;
         },
         child: Stack(
+          key: _scrollbarKey,
           children: <Widget>[
             RepaintBoundary(
               child: widget.child,
