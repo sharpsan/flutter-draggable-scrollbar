@@ -83,7 +83,10 @@ class SemicircleDemo extends StatelessWidget {
     return DraggableScrollbar.semicircle(
       labelTextBuilder: (offset) {
         final int currentItem = controller.hasClients
-            ? (controller.offset / controller.position.maxScrollExtent * numItems).floor()
+            ? (controller.offset /
+                    controller.position.maxScrollExtent *
+                    numItems)
+                .floor()
             : 0;
 
         return Text("$currentItem");
@@ -125,8 +128,8 @@ class ArrowsDemo extends StatelessWidget {
       alwaysVisibleScrollThumb: true,
       backgroundColor: Colors.grey.shade800,
       padding: EdgeInsets.only(right: 4.0),
-      labelTextBuilder: (double offset) =>
-          Text("${offset ~/ _itemExtent}", style: TextStyle(color: Colors.white)),
+      labelTextBuilder: (double offset) => Text("${offset ~/ _itemExtent}",
+          style: TextStyle(color: Colors.white)),
       controller: controller,
       child: ListView.builder(
         controller: controller,
