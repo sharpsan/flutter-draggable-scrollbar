@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 /// Build the Scroll Thumb and label using the current configuration
@@ -20,7 +19,7 @@ typedef Text LabelTextBuilder(double offsetY);
 /// for quick navigation of the BoxScrollView.
 class DraggableScrollbar extends StatefulWidget {
   /// The view that will be scrolled with the scroll thumb
-  final BoxScrollView child;
+  final Widget child;
 
   /// A function that builds a thumb using the current configuration
   final ScrollThumbBuilder scrollThumbBuilder;
@@ -67,7 +66,11 @@ class DraggableScrollbar extends StatefulWidget {
     this.labelConstraints,
   })  : assert(controller != null),
         assert(scrollThumbBuilder != null),
-        assert(child.scrollDirection == Axis.vertical),
+        assert(child is BoxScrollView || child is SingleChildScrollView),
+        assert((child is BoxScrollView &&
+                child.scrollDirection == Axis.vertical) ||
+            (child is SingleChildScrollView &&
+                child.scrollDirection == Axis.vertical)),
         super(key: key);
 
   DraggableScrollbar.rrect({
@@ -83,7 +86,10 @@ class DraggableScrollbar extends StatefulWidget {
     this.scrollbarTimeToFade = const Duration(milliseconds: 600),
     this.labelTextBuilder,
     this.labelConstraints,
-  })  : assert(child.scrollDirection == Axis.vertical),
+  })  : assert((child is BoxScrollView &&
+                child.scrollDirection == Axis.vertical) ||
+            (child is SingleChildScrollView &&
+                child.scrollDirection == Axis.vertical)),
         scrollThumbBuilder =
             _thumbRRectBuilder(scrollThumbKey, alwaysVisibleScrollThumb),
         super(key: key);
@@ -101,7 +107,10 @@ class DraggableScrollbar extends StatefulWidget {
     this.scrollbarTimeToFade = const Duration(milliseconds: 600),
     this.labelTextBuilder,
     this.labelConstraints,
-  })  : assert(child.scrollDirection == Axis.vertical),
+  })  : assert((child is BoxScrollView &&
+                child.scrollDirection == Axis.vertical) ||
+            (child is SingleChildScrollView &&
+                child.scrollDirection == Axis.vertical)),
         scrollThumbBuilder =
             _thumbArrowBuilder(scrollThumbKey, alwaysVisibleScrollThumb),
         super(key: key);
@@ -119,7 +128,10 @@ class DraggableScrollbar extends StatefulWidget {
     this.scrollbarTimeToFade = const Duration(milliseconds: 600),
     this.labelTextBuilder,
     this.labelConstraints,
-  })  : assert(child.scrollDirection == Axis.vertical),
+  })  : assert((child is BoxScrollView &&
+                child.scrollDirection == Axis.vertical) ||
+            (child is SingleChildScrollView &&
+                child.scrollDirection == Axis.vertical)),
         scrollThumbBuilder = _thumbSemicircleBuilder(
             heightScrollThumb * 0.6, scrollThumbKey, alwaysVisibleScrollThumb),
         super(key: key);
@@ -617,7 +629,8 @@ class SlideFadeTransition extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: animation,
-      builder: (context, child) => animation.value == 0.0 ? Container() : child!,
+      builder: (context, child) =>
+          animation.value == 0.0 ? Container() : child!,
       child: SlideTransition(
         position: Tween(
           begin: Offset(0.3, 0.0),
